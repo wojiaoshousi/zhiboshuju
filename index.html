@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟观看数据生成器</title>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 虚拟观看数据生成器</h1>
+            <p class="subtitle">生成脱敏的虚拟访问记录，支持自定义医院、科室并导出Excel</p>
+        </div>
+
+        <div class="main-layout">
+            <div class="card" id="configCard">
+                <div class="card-title">
+                    <span class="icon icon-blue">⚙️</span> 数据生成配置
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex:2; min-width:180px;">
+                        <label for="topicInput">🏷️ 话题名称</label>
+                        <input type="text" id="topicInput" placeholder="例如：肿瘤防治学术研讨" value="肿瘤防治">
+                    </div>
+                    <div class="form-group" style="flex:0.8; min-width:100px;">
+                        <label for="countInput">🔢 生成数量</label>
+                        <input type="number" id="countInput" value="20" min="1" max="5000" step="1">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="meetingDate">📅 会议日期</label>
+                        <input type="date" id="meetingDate">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="meetingStartTime">🕐 会议开始时间</label>
+                        <input type="time" id="meetingStartTime" value="19:00">
+                    </div>
+                    <div class="form-group">
+                        <label for="meetingEndTime">🕒 会议结束时间</label>
+                        <input type="time" id="meetingEndTime" value="21:00">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>📊 登录时间范围偏移</label>
+                        <div class="time-offset-group">
+                            <select id="loginOffsetStart">
+                                <option value="-60">-1小时</option>
+                                <option value="-55">-55分钟</option>
+                                <option value="-50">-50分钟</option>
+                                <option value="-45">-45分钟</option>
+                                <option value="-40">-40分钟</option>
+                                <option value="-35">-35分钟</option>
+                                <option value="-30">-30分钟</option>
+                                <option value="-25">-25分钟</option>
+                                <option value="-20">-20分钟</option>
+                                <option value="-15">-15分钟</option>
+                                <option value="-10" selected>-10分钟</option>
+                                <option value="-5">-5分钟</option>
+                                <option value="0">0分钟</option>
+                                <option value="5">+5分钟</option>
+                                <option value="10">+10分钟</option>
+                                <option value="15">+15分钟</option>
+                                <option value="20">+20分钟</option>
+                                <option value="25">+25分钟</option>
+                                <option value="30">+30分钟</option>
+                                <option value="35">+35分钟</option>
+                                <option value="40">+40分钟</option>
+                                <option value="45">+45分钟</option>
+                                <option value="50">+50分钟</option>
+                                <option value="55">+55分钟</option>
+                                <option value="60">+1小时</option>
+                            </select>
+                            <span class="offset-separator">至</span>
+                            <select id="loginOffsetEnd">
+                                <option value="-60">-1小时</option>
+                                <option value="-55">-55分钟</option>
+                                <option value="-50">-50分钟</option>
+                                <option value="-45">-45分钟</option>
+                                <option value="-40">-40分钟</option>
+                                <option value="-35">-35分钟</option>
+                                <option value="-30">-30分钟</option>
+                                <option value="-25">-25分钟</option>
+                                <option value="-20">-20分钟</option>
+                                <option value="-15">-15分钟</option>
+                                <option value="-10">-10分钟</option>
+                                <option value="-5">-5分钟</option>
+                                <option value="0">0分钟</option>
+                                <option value="5">+5分钟</option>
+                                <option value="10">+10分钟</option>
+                                <option value="15">+15分钟</option>
+                                <option value="20" selected>+20分钟</option>
+                                <option value="25">+25分钟</option>
+                                <option value="30">+30分钟</option>
+                                <option value="35">+35分钟</option>
+                                <option value="40">+40分钟</option>
+                                <option value="45">+45分钟</option>
+                                <option value="50">+50分钟</option>
+                                <option value="55">+55分钟</option>
+                                <option value="60">+1小时</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>📊 登出时间范围偏移</label>
+                        <div class="time-offset-group">
+                            <select id="logoutOffsetStart">
+                                <option value="-60">-1小时</option>
+                                <option value="-55">-55分钟</option>
+                                <option value="-50">-50分钟</option>
+                                <option value="-45">-45分钟</option>
+                                <option value="-40">-40分钟</option>
+                                <option value="-35">-35分钟</option>
+                                <option value="-30">-30分钟</option>
+                                <option value="-25">-25分钟</option>
+                                <option value="-20">-20分钟</option>
+                                <option value="-15">-15分钟</option>
+                                <option value="-10">-10分钟</option>
+                                <option value="-5">-5分钟</option>
+                                <option value="0">0分钟</option>
+                                <option value="5">+5分钟</option>
+                                <option value="10">+10分钟</option>
+                                <option value="15">+15分钟</option>
+                                <option value="20">+20分钟</option>
+                                <option value="25">+25分钟</option>
+                                <option value="30" selected>+30分钟</option>
+                                <option value="35">+35分钟</option>
+                                <option value="40">+40分钟</option>
+                                <option value="45">+45分钟</option>
+                                <option value="50">+50分钟</option>
+                                <option value="55">+55分钟</option>
+                                <option value="60">+1小时</option>
+                            </select>
+                            <span class="offset-separator">至</span>
+                            <select id="logoutOffsetEnd">
+                                <option value="-60">-1小时</option>
+                                <option value="-55">-55分钟</option>
+                                <option value="-50">-50分钟</option>
+                                <option value="-45">-45分钟</option>
+                                <option value="-40">-40分钟</option>
+                                <option value="-35">-35分钟</option>
+                                <option value="-30">-30分钟</option>
+                                <option value="-25">-25分钟</option>
+                                <option value="-20">-20分钟</option>
+                                <option value="-15">-15分钟</option>
+                                <option value="-10">-10分钟</option>
+                                <option value="-5">-5分钟</option>
+                                <option value="0">0分钟</option>
+                                <option value="5">+5分钟</option>
+                                <option value="10">+10分钟</option>
+                                <option value="15">+15分钟</option>
+                                <option value="20">+20分钟</option>
+                                <option value="25">+25分钟</option>
+                                <option value="30">+30分钟</option>
+                                <option value="35">+35分钟</option>
+                                <option value="40">+40分钟</option>
+                                <option value="45">+45分钟</option>
+                                <option value="50">+50分钟</option>
+                                <option value="55">+55分钟</option>
+                                <option value="60" selected>+1小时</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="card-title">
+                    <span class="icon icon-green">🏥</span> 医院管理（已存储 <span id="cityCount" class="badge badge-count">0</span> 个城市，<span id="hospitalCount" class="badge badge-count">0</span> 家医院）
+                    <div class="title-actions">
+                        <button class="btn btn-outline btn-sm" onclick="selectAllHospitals()">全选</button>
+                        <button class="btn btn-outline btn-sm" onclick="deselectAllHospitals()">全不选</button>
+                    </div>
+                </div>
+                <div class="add-row">
+                    <div class="form-group">
+                        <label for="cityInput">城市名称</label>
+                        <input type="text" id="cityInput" placeholder="输入城市名称" value="天津市">
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="addCity()" style="margin-bottom:2px;">➕ 添加城市</button>
+                </div>
+                <div id="hospitalContainer" class="hospital-container"></div>
+
+                <hr>
+
+                <div class="card-title">
+                    <span class="icon icon-teal">🩺</span> 科室管理（已存储 <span id="deptCount" class="badge badge-count">0</span> 个科室）
+                    <div class="title-actions">
+                        <button class="btn btn-outline btn-sm" onclick="selectAllDepts()">全选</button>
+                        <button class="btn btn-outline btn-sm" onclick="deselectAllDepts()">全不选</button>
+                    </div>
+                </div>
+                <div class="add-row">
+                    <div class="form-group">
+                        <label for="deptInput">科室名称</label>
+                        <input type="text" id="deptInput" placeholder="输入科室名称" value="肿瘤科">
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="addDept()" style="margin-bottom:2px;">➕ 添加科室</button>
+                </div>
+                <div class="dept-container" id="deptContainer"></div>
+
+                <hr>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="generateData()">🚀 生成数据</button>
+                    <button class="btn btn-success" id="downloadBtn" onclick="downloadExcel()" disabled>📥 下载Excel</button>
+                    <button class="btn btn-outline" onclick="resetForm()">🔄 一键重置</button>
+                </div>
+                <p style="font-size:0.7rem;color:#a0aec0;text-align:center;margin-top:8px;">
+                    💡 重置不会清除已保存的医院和科室列表
+                </p>
+            </div>
+
+            <div class="card" id="previewCard">
+                <div class="card-title">
+                    <span class="icon icon-orange">📊</span> 数据预览
+                    <span style="font-size:0.75rem;color:#a0aec0;font-weight:400;" id="previewCount"></span>
+                </div>
+                <div class="table-wrapper" id="tableWrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>所属话题/频道/训练营/课程/课节/自定义菜单</th>
+                                <th>来源</th>
+                                <th>登录时间</th>
+                                <th>登出时间</th>
+                                <th>姓名</th>
+                                <th>医院</th>
+                                <th>科室</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="8" style="color:#a0aec0;padding:30px;">点击「生成数据」按钮预览结果</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="stats-row" id="statsRow" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toastContainer"></div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
